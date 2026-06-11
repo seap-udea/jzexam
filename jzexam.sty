@@ -170,16 +170,29 @@
 }
 
 \newcommand{\jzexam@probleminfoheader}{%
+  \begingroup
+  \setlength{\parskip}{0pt}%
   \par\noindent
+  \ifjzexam@inproblems
+    \hspace*{-\@totalleftmargin}%
+  \fi
+  \begin{minipage}{\textwidth}
   \jzexam@renderinfoblock
   \par\vspace*{0.2em}
   \jzexam@renderfieldsblock
   \par\vspace*{0.2em}
   \jzexam@renderheaderline
-  \vspace{0.2em}
+  \end{minipage}%
+  \par\vspace{0.2em}
+  \endgroup
 }
 
+\newif\ifjzexam@hideproblem
+\jzexam@hideproblemfalse
+\newcommand{\hideproblem}{\global\jzexam@hideproblemtrue}
+
 \NewDocumentCommand{\problempage}{o}{%
+  \ifjzexam@hideproblem\else
   \IfNoValueF{#1}{%
     \def\jzexam@ppopt{#1}%
     \def\jzexam@ppheader{header}%
@@ -202,16 +215,23 @@
   \IfNoValueT{#1}{%
     \newpage
   }%
+  \fi
 }
 
 \newcommand{\makeexamheader}{%
+  \begingroup
+  \setlength{\parskip}{0pt}%
   \par\noindent
   \jzexam@renderinfoblock
   \par\vspace*{0.2em}
   \jzexam@renderfieldsblock
   \par\vspace*{0.2em}
   \jzexam@renderheaderline
-  \vspace{0.2em}
+  \par\vspace{0.2em}
+  \endgroup
+  \par\vspace{-\parskip}
+  \vspace{-0.4em}
+  \vspace{0.5em}
 }
 
 \newcounter{problem}
@@ -220,22 +240,55 @@
 {\jzexam@inproblemstrue\begin{enumerate}[label=\arabic*., leftmargin=*, itemsep=0.5em, topsep=0.4em, parsep=0pt, partopsep=0pt]}
 {\end{enumerate}\jzexam@inproblemsfalse}
 
-\NewDocumentEnvironment{problem}{m O{}}
+\NewDocumentEnvironment{problem}{m O{} +b}
 {%
-  \refstepcounter{problem}%
-  \item {\large\bfseries #1%
-  \if\relax\detokenize{#2}\relax
-  \else\space (#2 pt)\fi.}
-  \par\vspace{0.15em}
+  \ifjzexam@hideproblem
+    \global\jzexam@hideproblemfalse
+  \else
+    \refstepcounter{problem}%
+    \item {\large\bfseries #1%
+    \if\relax\detokenize{#2}\relax
+    \else\space (#2 pt)\fi.}
+    \par\vspace{0.15em}
+    #3%
+  \fi
 }
 {}
 
+\newif\if@inhiddenquestion
+\@inhiddenquestionfalse
+
+\newif\if@hidequestion
+\@hidequestionfalse
+
+\newcommand{\hidequestion}{%
+  \global\@hidequestiontrue
+}
+
 \NewDocumentEnvironment{questions}{}
 {\begin{enumerate}[label=\alph*), leftmargin=*, itemsep=0.35em, topsep=0.25em, parsep=0pt, partopsep=0pt]}
-{\end{enumerate}}
+{%
+  \if@inhiddenquestion
+    \egroup
+    \global\@inhiddenquestionfalse
+  \fi
+\end{enumerate}}
 
-\newcommand{\question}{\item}
-\newcommand{\questionsection}[1]{\item \textbf{#1}}
+\newcommand{\question}{%
+  \if@inhiddenquestion
+    \egroup
+    \global\@inhiddenquestionfalse
+  \fi
+  
+  \if@hidequestion
+    \global\@hidequestionfalse
+    \global\@inhiddenquestiontrue
+    \setbox\z@=\vbox\bgroup
+  \else
+    \item
+  \fi
+}
+\newcommand{\questionsection}[1]{\question \textbf{#1}}
 
 % Herramientas para preguntas de seleccion unica/multiple.
 \newcommand{\singlechoicelabel}{Seleccion Unica}
@@ -278,4 +331,25 @@
   \ifjzexam@showanswers
     {\color{red}#1}
   \fi
+}
+
+% Entorno para la hoja de formulas
+\newenvironment{formulasheet}
+{%
+ \newpage
+ \vspace*{\fill}
+ \begin{center}\textbf{\Large Hoja de F\'ormulas}\end{center}\vspace{1em}
+ \noindent\setbox\z@=\vbox\bgroup
+ \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
+ \small
+ \begin{itemize}[leftmargin=*, itemsep=1.5em]%
+}%
+{%
+ \end{itemize}%
+ \vspace{1em}%
+ \end{minipage}%
+ \egroup
+ \fbox{\box\z@}%
+ \vspace*{\fill}%
+ \clearpage
 }
