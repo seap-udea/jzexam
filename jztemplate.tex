@@ -1,0 +1,179 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREAMBULO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage[answers]{jzexam}
+%\usepackage[noanswers]{jzexam}
+\setlength\parindent{0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONFIGURACION DE ENCABEZADO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\examinfo
+  {Plantilla de Examen - Curso X}
+  {Departamento de Fisica - Universidad Y\\Curso: Tema General\\Semestre 2026-1}
+
+% Campos por defecto del encabezado:
+% Personalizacion total de campos (quien presenta el examen define los que quiera):
+% - \examfield[0.5]{...} usa 50% de la linea (dos campos por fila)
+% - \examfield[1]{...} usa 100% de la linea (campo en fila separada)
+\setexamheaderfields{%
+ \examfield[0.5]{Nombre}%
+ \examfield{Cédula}%
+ \examfield{Programa}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENCABEZADO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Opcional: desactivar la linea horizontal inicial del encabezado
+%\hideinitialhruler
+\begin{document}
+\makeexamheader
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INICIO DE PROBLEMAS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{examproblems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PROBLEMA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\problempage
+\problempage[header]
+\begin{problem}{Problema generico de mecanica relativista}[30]
+Enuncie aqui el contexto general del problema.
+
+\begin{questions}
+
+%===========================
+% PREGUNTA
+%===========================
+\question Derive una expresion simbolica para una cantidad fisica de interes.
+
+\begin{solution}
+Esta es una solucion de ejemplo. Reemplace este texto por el desarrollo real del problema.
+\end{solution}
+
+%===========================
+% PREGUNTA
+%===========================
+\question Interprete fisicamente el resultado del inciso anterior y discuta sus limites.
+
+\begin{solution}
+Aqui puede incluir una interpretacion breve y la discusion de casos limite.
+\end{solution}
+
+\end{questions}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PROBLEMA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\problempage[header]
+\begin{problem}{Problema generico de campo electromagnetico}[40]
+Considere un escenario con campos \(\vec{E}\) y \(\vec{B}\) bajo una transformacion de Lorentz.
+
+\begin{questions}
+
+%===========================
+% PREGUNTA
+%===========================
+\question Calcule una magnitud invariante asociada al tensor de campo.
+
+\begin{solution}
+Incluya aqui la expresion del invariante y los pasos principales.
+\end{solution}
+
+%===========================
+% PREGUNTA
+%===========================
+\question Determine los campos en un sistema de referencia en movimiento y compare con el sistema inicial.
+
+\begin{solution}
+Escriba aqui las transformaciones y la comparacion cualitativa de resultados.
+\end{solution}
+
+\end{questions}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PROBLEMA: SELECCION MULTIPLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\problempage[header]
+\begin{problem}{Preguntas de seleccion unica y multiple}[30]
+Escoja la opcion o las opciones correctas y justifique brevemente.
+
+\begin{questions}
+
+%===========================
+% PREGUNTA: SELECCION UNICA
+%===========================
+\singlechoicequestion{Para una particula libre, la cantidad conservada asociada a simetria temporal es:}
+
+\begin{choices}[2]
+\choice{El momento angular total.}
+\correctchoice{La energia total.}
+\choice{La carga electrica efectiva.}
+\choice{La curvatura escalar local.}
+\end{choices}
+
+%===========================
+% PREGUNTA: SELECCION MULTIPLE
+%===========================
+\multiplechoicequestion{En relatividad especial, cuales afirmaciones son correctas?}
+
+\begin{choices}[2]
+\correctchoice{La velocidad de la luz en el vacio es invariante.}
+\choice{El tiempo propio es identico para todos los observadores inerciales.}
+\correctchoice{Eventos simultaneos en un marco pueden no serlo en otro.}
+\choice{La masa en reposo depende del sistema de referencia.}
+\end{choices}
+
+\end{questions}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECCION DE PREGUNTAS CORTAS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\problempage[header]
+\begin{problem}{Preguntas conceptuales cortas}[30]
+Responda de manera breve y justificada.
+
+\begin{questions}
+
+%===========================
+% SUBSECCION: CONCEPTOS
+%===========================
+\questionsection{Conceptos generales}
+Describa en dos o tres lineas la diferencia entre magnitudes invariantes y dependientes del observador.
+
+\begin{solution}
+Un invariante conserva su valor bajo transformaciones de Lorentz, mientras que una magnitud dependiente del observador cambia segun el sistema de referencia.
+\end{solution}
+
+%===========================
+% SUBSECCION: APLICACION
+%===========================
+\questionsection{Aplicacion}
+Proponga un ejemplo donde la eleccion del sistema de referencia simplifique el analisis de un problema.
+
+\begin{solution}
+Un ejemplo tipico es trabajar en el sistema de centro de masa en colisiones relativistas para simplificar la conservacion de energia y momento.
+\end{solution}
+
+\end{questions}
+\end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIN DE PROBLEMAS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{examproblems}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIN DEL DOCUMENTO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

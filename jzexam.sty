@@ -1,0 +1,281 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{jzexam}[2026/06/11 v0.1 Exam package for Relativity courses]
+
+\RequirePackage{xparse}
+\RequirePackage{environ}
+\RequirePackage{enumitem}
+\RequirePackage{tabularx}
+\RequirePackage{multicol}
+\RequirePackage{xcolor}
+\RequirePackage{fancyhdr}
+\RequirePackage[margin=2.5cm]{geometry}
+
+\newif\ifjzexam@showanswers
+\jzexam@showanswersfalse
+
+\newif\ifjzexam@showinitialhruler
+\jzexam@showinitialhrulertrue
+
+\DeclareOption{answers}{\jzexam@showanswerstrue}
+\DeclareOption{noanswers}{\jzexam@showanswersfalse}
+\ProcessOptions\relax
+
+\newcommand{\showanswers}{\jzexam@showanswerstrue}
+\newcommand{\hideanswers}{\jzexam@showanswersfalse}
+\newcommand{\showinitialhruler}{\jzexam@showinitialhrulertrue}
+\newcommand{\hideinitialhruler}{\jzexam@showinitialhrulerfalse}
+
+\newcommand{\jzexam@title}{Examen}
+\newcommand{\jzexam@subtitle}{}
+\newcommand{\jzexam@studentidlabel}{Cedula}
+
+\newif\ifjzexam@customheaderfields
+\jzexam@customheaderfieldsfalse
+\newif\ifjzexam@inproblems
+\jzexam@inproblemsfalse
+\newcommand{\jzexam@headerfields}{ }
+\newdimen\jzexam@lineused
+\newdimen\jzexam@fieldwidth
+\newdimen\jzexam@consumedwidth
+\newdimen\jzexam@autowidth
+\newdimen\jzexam@tmpdim
+\newcount\jzexam@autocount
+\newcount\jzexam@rowcount
+\newcommand{\jzexam@currentrow}{}
+
+\newcommand{\examtitle}[1]{\renewcommand{\jzexam@title}{#1}}
+\newcommand{\examsubtitle}[1]{\renewcommand{\jzexam@subtitle}{#1}}
+\newcommand{\setstudentidlabel}[1]{\renewcommand{\jzexam@studentidlabel}{#1}}
+
+\newcommand{\jzexam@renderfielddimen}[2]{%
+  \jzexam@fieldwidth=#1\relax
+  \parbox[t]{\jzexam@fieldwidth}{\textbf{#2:} \hrulefill}%
+}
+
+\newcommand{\jzexam@resetrow}{%
+  \jzexam@consumedwidth=0pt
+  \jzexam@autocount=0
+  \jzexam@rowcount=0
+  \renewcommand{\jzexam@currentrow}{}
+}
+
+\newcommand{\jzexam@flushrow}{%
+  \ifnum\jzexam@rowcount>0
+    \ifnum\jzexam@autocount>0
+      \jzexam@autowidth=\dimexpr(\linewidth-\jzexam@consumedwidth)/\jzexam@autocount\relax
+      \ifdim\jzexam@autowidth<0pt
+        \jzexam@autowidth=0pt
+      \fi
+    \else
+      \jzexam@autowidth=0pt
+    \fi
+    \noindent
+    \jzexam@currentrow
+    \par\noindent
+    \jzexam@resetrow
+  \fi
+}
+
+\newcommand{\jzexam@entryspec}[2]{%
+  \jzexam@tmpdim=#1\linewidth
+  \jzexam@renderfielddimen{\jzexam@tmpdim}{#2}%
+}
+
+\newcommand{\jzexam@entryauto}[1]{%
+  \jzexam@renderfielddimen{\jzexam@autowidth}{#1}%
+}
+
+\newcommand{\jzexam@addspec}[2]{%
+  \jzexam@tmpdim=#1\linewidth
+  \ifnum\jzexam@rowcount>0
+    \ifdim\jzexam@consumedwidth>\dimexpr\linewidth-0.1pt\relax
+      \jzexam@flushrow
+    \fi
+    \ifdim\dimexpr\jzexam@consumedwidth+\jzexam@tmpdim\relax>\dimexpr\linewidth+0.1pt\relax
+      \jzexam@flushrow
+    \fi
+  \fi
+  \g@addto@macro\jzexam@currentrow{\jzexam@entryspec{#1}{#2}}%
+  \advance\jzexam@consumedwidth by \jzexam@tmpdim
+  \advance\jzexam@rowcount by 1
+  \ifdim\jzexam@consumedwidth>\dimexpr\linewidth-0.1pt\relax
+    \jzexam@flushrow
+  \fi
+}
+
+\newcommand{\jzexam@addauto}[1]{%
+  \ifnum\jzexam@rowcount>0
+    \ifdim\jzexam@consumedwidth>\dimexpr\linewidth-0.1pt\relax
+      \jzexam@flushrow
+    \fi
+  \fi
+  \g@addto@macro\jzexam@currentrow{\jzexam@entryauto{#1}}%
+  \advance\jzexam@autocount by 1
+  \advance\jzexam@rowcount by 1
+}
+
+\NewDocumentCommand{\examfield}{o m}{%
+  \IfNoValueTF{#1}{\jzexam@addauto{#2}}{\jzexam@addspec{#1}{#2}}%
+}
+
+\newcommand{\setexamheaderfields}[1]{%
+  \jzexam@customheaderfieldstrue
+  \renewcommand{\jzexam@headerfields}{#1}%
+}
+\newcommand{\resetexamheaderfields}{\jzexam@customheaderfieldsfalse}
+
+\NewDocumentCommand{\examinfo}{m m}{%
+  \examtitle{#1}%
+  \examsubtitle{#2}%
+}
+
+\newcommand{\jzexam@applypagestyle}{%
+  \pagestyle{fancy}
+  \fancyhf{}
+  \fancyfoot[C]{\jzexam@title\;--\;\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyfoot[C]{\jzexam@title\;--\;\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+  }
+}
+
+\AtBeginDocument{\jzexam@applypagestyle}
+
+\newcommand{\jzexam@renderinfoblock}{%
+  \noindent\textbf{\Large \jzexam@title}\\
+  \if\relax\detokenize{\jzexam@subtitle}\relax
+  \else
+    \jzexam@subtitle\\
+  \fi
+}
+
+\newcommand{\jzexam@renderheaderline}{%
+  \ifjzexam@showinitialhruler
+    \rule{\textwidth}{1pt}
+  \fi
+}
+
+\newcommand{\jzexam@renderfieldsblock}{%
+  \jzexam@resetrow
+  \ifjzexam@customheaderfields
+    \jzexam@headerfields
+  \else
+    \examfield[1]{\jzexam@studentidlabel}
+  \fi
+  \jzexam@flushrow
+}
+
+\newcommand{\jzexam@probleminfoheader}{%
+  \par\noindent
+  \jzexam@renderinfoblock
+  \par\vspace*{0.2em}
+  \jzexam@renderfieldsblock
+  \par\vspace*{0.2em}
+  \jzexam@renderheaderline
+  \vspace{0.2em}
+}
+
+\NewDocumentCommand{\problempage}{o}{%
+  \IfNoValueF{#1}{%
+    \def\jzexam@ppopt{#1}%
+    \def\jzexam@ppheader{header}%
+    \ifx\jzexam@ppopt\jzexam@ppheader
+      % If called before the first \item inside examproblems, ignore header mode to avoid list errors.
+      \ifjzexam@inproblems
+        \ifnum\value{problem}=0
+        \else
+          \newpage
+          \jzexam@probleminfoheader
+        \fi
+      \else
+        \newpage
+        \jzexam@probleminfoheader
+      \fi
+    \else
+      \newpage
+    \fi
+  }%
+  \IfNoValueT{#1}{%
+    \newpage
+  }%
+}
+
+\newcommand{\makeexamheader}{%
+  \par\noindent
+  \jzexam@renderinfoblock
+  \par\vspace*{0.2em}
+  \jzexam@renderfieldsblock
+  \par\vspace*{0.2em}
+  \jzexam@renderheaderline
+  \vspace{0.2em}
+}
+
+\newcounter{problem}
+
+\NewDocumentEnvironment{examproblems}{}
+{\jzexam@inproblemstrue\begin{enumerate}[label=\arabic*., leftmargin=*, itemsep=0.5em, topsep=0.4em, parsep=0pt, partopsep=0pt]}
+{\end{enumerate}\jzexam@inproblemsfalse}
+
+\NewDocumentEnvironment{problem}{m O{}}
+{%
+  \refstepcounter{problem}%
+  \item {\large\bfseries #1%
+  \if\relax\detokenize{#2}\relax
+  \else\space (#2 pt)\fi.}
+  \par\vspace{0.15em}
+}
+{}
+
+\NewDocumentEnvironment{questions}{}
+{\begin{enumerate}[label=\alph*), leftmargin=*, itemsep=0.35em, topsep=0.25em, parsep=0pt, partopsep=0pt]}
+{\end{enumerate}}
+
+\newcommand{\question}{\item}
+\newcommand{\questionsection}[1]{\item \textbf{#1}}
+
+% Herramientas para preguntas de seleccion unica/multiple.
+\newcommand{\singlechoicelabel}{Seleccion Unica}
+\newcommand{\multiplechoicelabel}{Seleccion Multiple}
+\newcommand{\setsinglechoicelabel}[1]{\renewcommand{\singlechoicelabel}{#1}}
+\newcommand{\setmultiplechoicelabel}[1]{\renewcommand{\multiplechoicelabel}{#1}}
+
+\newcommand{\jzexam@correctmark}{*}
+\newcommand{\setcorrectmark}[1]{\renewcommand{\jzexam@correctmark}{#1}}
+
+\NewDocumentCommand{\singlechoicequestion}{m}{%
+  \question \textbf{(\singlechoicelabel)} #1
+}
+
+\NewDocumentCommand{\multiplechoicequestion}{m}{%
+  \question \textbf{(\multiplechoicelabel)} #1
+}
+
+\NewDocumentEnvironment{choices}{O{2}}{%
+  \begin{multicols}{#1}
+  \begin{enumerate}[label=\alph*), leftmargin=*, itemsep=0.15em, topsep=0.15em, parsep=0pt, partopsep=0pt]
+}{%
+  \end{enumerate}
+  \end{multicols}
+}
+
+\NewDocumentCommand{\choice}{m}{\item #1}
+\NewDocumentCommand{\correctchoice}{m}{\item #1\answer{ \jzexam@correctmark}}
+
+\NewEnviron{solution}{%
+  \ifjzexam@showanswers
+    \par\vspace{0.15em}
+    \textbf{Solucion:}\\
+    {\color{red}\BODY}
+    \par\vspace{0.15em}
+  \fi
+}
+
+\NewDocumentCommand{\answer}{m}{%
+  \ifjzexam@showanswers
+    {\color{red}#1}
+  \fi
+}
