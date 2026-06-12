@@ -1,41 +1,40 @@
-# Makefile para compilar examenes LaTeX
+# Makefile for compiling LaTeX exams with jzexam
+# Author: Jorge I. Zuluaga (C) 2026-present
+# Repository: https://github.com/seap-udea/jzexam
 
 LATEX ?= pdflatex
 LATEXFLAGS ?= -interaction=nonstopmode -halt-on-error
 
-# Archivo por defecto
-MAIN ?= ejemplo-examen-jz
+# Default file to compile
+MAIN ?= jztemplate
 
-# Todos los .tex del directorio actual
+# All .tex files in the current directory
 TEX_FILES := $(wildcard *.tex)
 PDF_FILES := $(TEX_FILES:.tex=.pdf)
 
-.PHONY: all ejemplo examen clean distclean help
+.PHONY: all template clean distclean help
 
 all: $(MAIN).pdf
 
-ejemplo: ejemplo-examen-jz.pdf
+template: jztemplate.pdf
 
-examen: RG-2026-1-ExamenFinal.pdf
-
-# Compilacion generica por patron
+# Generic pattern rule: compile any .tex to .pdf
 %.pdf: %.tex
 	$(LATEX) $(LATEXFLAGS) $<
 
-# Limpia archivos auxiliares comunes de LaTeX
+# Remove common LaTeX auxiliary files
 clean:
 	rm -f *.aux *.log *.out *.toc *.lof *.lot *.fls *.fdb_latexmk *.synctex.gz
 
-# Limpieza total: tambien elimina PDFs generados
+# Full clean: also remove generated PDFs
 distclean: clean
 	rm -f $(PDF_FILES)
 
 help:
-	@echo "Objetivos disponibles:"
-	@echo "  make            # compila $(MAIN).tex"
-	@echo "  make all        # igual que make"
-	@echo "  make ejemplo    # compila ejemplo-examen-jz.tex"
-	@echo "  make examen     # compila RG-2026-1-ExamenFinal.tex"
-	@echo "  make <nombre>.pdf  # compila cualquier <nombre>.tex"
-	@echo "  make clean      # elimina auxiliares"
-	@echo "  make distclean  # elimina auxiliares y PDFs"
+	@echo "Available targets:"
+	@echo "  make              # compile $(MAIN).tex"
+	@echo "  make all          # same as make"
+	@echo "  make template     # compile jztemplate.tex"
+	@echo "  make <name>.pdf   # compile any <name>.tex"
+	@echo "  make clean        # remove auxiliary files"
+	@echo "  make distclean    # remove auxiliary files and PDFs"

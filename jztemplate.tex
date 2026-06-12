@@ -1,193 +1,203 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PREAMBULO
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
-\usepackage{amsmath}
-\usepackage[answers]{jzexam}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% jzexam — LaTeX Exam Package
+% Author: Jorge I. Zuluaga (C) 2026-present
+% Repository: https://github.com/seap-udea/jzexam
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EXAM PACKAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Optional: hide answers (student version)
 %\usepackage[noanswers]{jzexam}
+% Show answers (answer-key / instructor version)
+\usepackage[answers]{jzexam}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% OTHER PACKAGES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
 \setlength\parindent{0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CONFIGURACION DE ENCABEZADO
+% EXAM HEADER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \examinfo
-  {Plantilla de Examen - Curso X}
-  {Departamento de Fisica - Universidad Y\\Curso: Tema General\\Semestre 2026-1}
+  {Exam Template — Course X}
+  {Department of Physics — University Y\\Course: General Topic\\Semester 2026-1}
 
-% Campos por defecto del encabezado:
-% Personalizacion total de campos (quien presenta el examen define los que quiera):
-% - \examfield[0.5]{...} usa 50% de la linea (dos campos por fila)
-% - \examfield[1]{...} usa 100% de la linea (campo en fila separada)
+% Customizing the student fill-in fields:
+% - \examfield[0.5]{...}  uses 50% of the line width (two fields per row)
+% - \examfield[1]{...}    uses 100% of the line width (one field per row)
+% - \examfield{...}       auto-width (shares remaining space equally)
 \setexamheaderfields{%
- \examfield[0.5]{Nombre}%
- \examfield{Cédula}%
- \examfield{Programa}%
+ \examfield[0.5]{Name}%
+ \examfield{ID Number}%
+ \examfield{Programme}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ENCABEZADO
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Opcional: desactivar la linea horizontal inicial del encabezado
+% Optional: remove the initial horizontal rule from the header
 %\hideinitialhruler
 \begin{document}
 \makeexamheader
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% INICIO DE PROBLEMAS
+% PROBLEMS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{examproblems}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PROBLEMA
+% PROBLEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\problempage
 \problempage[header]
-\begin{problem}{Problema generico de mecanica relativista}[30]
-Enuncie aqui el contexto general del problema.
+\begin{problem}{Generic Problem in Relativistic Mechanics}[30]
+State the general context of the problem here.
 
 \begin{questions}
 
 %===========================
-% PREGUNTA
+% QUESTION
 %===========================
-\question Derive una expresion simbolica para una cantidad fisica de interes.
+\question Derive a symbolic expression for a physical quantity of interest.
 
 \begin{solution}
-Esta es una solucion de ejemplo. Reemplace este texto por el desarrollo real del problema.
+This is a sample solution. Replace this text with the actual derivation.
 \end{solution}
 
 %===========================
-% PREGUNTA (Ejemplo de uso de \hidequestion)
+% QUESTION (example of \hidequestion)
 %===========================
-% Use \hidequestion en lugar de \question para ocultar temporalmente un literal
-% sin necesidad de comentar o borrar el codigo. Ni el enunciado ni la solucion apareceran en el PDF.
-\hidequestion Interprete fisicamente el resultado del inciso anterior y discuta sus limites.
+% Use \hidequestion instead of commenting out a sub-question to temporarily
+% suppress it. Neither the question text nor its solution will appear in the PDF.
+\hidequestion Discuss the physical interpretation of the previous result and its limiting cases.
 
 \begin{solution}
-Aqui puede incluir una interpretacion breve y la discusion de casos limite.
+Include a brief interpretation and a discussion of limiting cases here.
 \end{solution}
 
 \end{questions}
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PROBLEMA
+% PROBLEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \problempage[header]
-\begin{problem}{Problema generico de campo electromagnetico}[40]
-Considere un escenario con campos \(\vec{E}\) y \(\vec{B}\) bajo una transformacion de Lorentz.
+\begin{problem}{Generic Problem in Electromagnetic Fields}[40]
+Consider a scenario with fields \(\vec{E}\) and \(\vec{B}\) under a Lorentz transformation.
 
 \begin{questions}
 
 %===========================
-% PREGUNTA
+% QUESTION
 %===========================
-\question Calcule una magnitud invariante asociada al tensor de campo.
+\question Calculate an invariant quantity associated with the field tensor.
 
 \begin{solution}
-Incluya aqui la expresion del invariante y los pasos principales.
+Include the invariant expression and the main derivation steps here.
 \end{solution}
 
 %===========================
-% PREGUNTA
+% QUESTION
 %===========================
-\question Determine los campos en un sistema de referencia en movimiento y compare con el sistema inicial.
+\question Determine the fields in a moving reference frame and compare with the original frame.
 
 \begin{solution}
-Escriba aqui las transformaciones y la comparacion cualitativa de resultados.
+Write the transformation equations and a qualitative comparison of results here.
 \end{solution}
 
 \end{questions}
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PROBLEMA: SELECCION MULTIPLE
+% PROBLEM: MULTIPLE CHOICE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\problempage[header]
-\begin{problem}{Preguntas de seleccion unica y multiple}[30]
-Escoja la opcion o las opciones correctas y justifique brevemente.
+\begin{problem}{Single-Answer and Multiple-Answer Questions}[30]
+Select the correct option(s) and provide a brief justification.
 
 \begin{questions}
 
 %===========================
-% PREGUNTA: SELECCION UNICA
+% QUESTION: SINGLE CHOICE
 %===========================
-\singlechoicequestion{Para una particula libre, la cantidad conservada asociada a simetria temporal es:}
+\singlechoicequestion{For a free particle, the conserved quantity associated with time-translation symmetry is:}
 
 \begin{choices}[2]
-\choice{El momento angular total.}
-\correctchoice{La energia total.}
-\choice{La carga electrica efectiva.}
-\choice{La curvatura escalar local.}
+\choice{The total angular momentum.}
+\correctchoice{The total energy.}
+\choice{The effective electric charge.}
+\choice{The local scalar curvature.}
 \end{choices}
 
 %===========================
-% PREGUNTA: SELECCION MULTIPLE
+% QUESTION: MULTIPLE CHOICE
 %===========================
-\multiplechoicequestion{En relatividad especial, cuales afirmaciones son correctas?}
+\multiplechoicequestion{In special relativity, which of the following statements are correct?}
 
 \begin{choices}[2]
-\correctchoice{La velocidad de la luz en el vacio es invariante.}
-\choice{El tiempo propio es identico para todos los observadores inerciales.}
-\correctchoice{Eventos simultaneos en un marco pueden no serlo en otro.}
-\choice{La masa en reposo depende del sistema de referencia.}
+\correctchoice{The speed of light in vacuum is invariant.}
+\choice{Proper time is the same for all inertial observers.}
+\correctchoice{Events simultaneous in one frame may not be simultaneous in another.}
+\choice{Rest mass depends on the reference frame.}
 \end{choices}
 
 \end{questions}
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECCION DE PREGUNTAS CORTAS
+% SHORT CONCEPTUAL QUESTIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\problempage[header]
-\begin{problem}{Preguntas conceptuales cortas}[30]
-Responda de manera breve y justificada.
+\begin{problem}{Short Conceptual Questions}[30]
+Answer briefly and with justification.
 
 \begin{questions}
 
 %===========================
-% SUBSECCION: CONCEPTOS
+% SUBSECTION: CONCEPTS
 %===========================
-\questionsection{Conceptos generales}
-Describa en dos o tres lineas la diferencia entre magnitudes invariantes y dependientes del observador.
+\questionsection{General Concepts}
+Describe in two or three sentences the difference between invariant quantities and observer-dependent quantities.
 
 \begin{solution}
-Un invariante conserva su valor bajo transformaciones de Lorentz, mientras que una magnitud dependiente del observador cambia segun el sistema de referencia.
+An invariant keeps its value under Lorentz transformations, whereas an observer-dependent quantity changes with the reference frame.
 \end{solution}
 
 %===========================
-% SUBSECCION: APLICACION
+% SUBSECTION: APPLICATION
 %===========================
-\questionsection{Aplicacion}
-Proponga un ejemplo donde la eleccion del sistema de referencia simplifique el analisis de un problema.
+\questionsection{Application}
+Propose an example where the choice of reference frame simplifies the analysis of a problem.
 
 \begin{solution}
-Un ejemplo tipico es trabajar en el sistema de centro de masa en colisiones relativistas para simplificar la conservacion de energia y momento.
+A typical example is working in the centre-of-mass frame for relativistic collisions, which simplifies the conservation of energy and momentum.
 \end{solution}
 
 \end{questions}
 \end{problem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIN DE PROBLEMAS
+% END OF PROBLEMS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{examproblems}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% HOJA DE FORMULAS (Opcional)
+% FORMULA SHEET (optional)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Use este entorno para generar una pagina de formulas al final del examen.
+% Use this environment to generate a formula page at the end of the exam.
 \begin{formulasheet}
-    \item Ecuaciones de Euler-Lagrange: $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) - \frac{\partial L}{\partial q_i} = 0$
+    \item Euler--Lagrange equations: $\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) - \frac{\partial L}{\partial q_i} = 0$
     
-    \item Identidad de Lagrange Jacobi y Teorema del Virial: $\dot{G}=2 K+U$, $2\langle K\rangle=-\langle U\rangle$
+    \item Lagrange--Jacobi identity and Virial theorem: $\dot{G}=2 K+U$, $2\langle K\rangle=-\langle U\rangle$
     
-    \item Transformaciones de Lorentz (1D): $x' = \gamma (x - vt), \quad t' = \gamma \left(t - \frac{vx}{c^2}\right)$
+    \item Lorentz transformations (1D): $x' = \gamma (x - vt), \quad t' = \gamma \left(t - \frac{vx}{c^2}\right)$
 \end{formulasheet}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIN DEL DOCUMENTO
+% END OF DOCUMENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}

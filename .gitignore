@@ -1,0 +1,52 @@
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.idx
+*.ind
+*.ilg
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+*.ist
+*.xdy
+*.nav
+*.snm
+*.vrb
+*.spl
+*.maf
+*.mtc
+*.mtc0
+*.pdfsync
+*.dvi
+*.ps
+
+# Generated PDFs (comment this out if you want to track compiled PDFs)
+*.pdf
+
+# latexmk working files
+.fdb_latexmk
+.latexmkrc
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.vscode/
+.idea/

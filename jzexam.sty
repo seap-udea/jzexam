@@ -1,3 +1,12 @@
+%% jzexam.sty — LaTeX Exam Package
+%% Copyright (C) 2026-present Jorge I. Zuluaga
+%% Repository: https://github.com/seap-udea/jzexam
+%% License: GNU GPL v3 — see LICENSE for details
+%%
+%% Provides structured environments and commands for typesetting academic
+%% exams: problems, sub-questions, multiple-choice, solutions, formula sheet,
+%% and a fully customizable student header.
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{jzexam}[2026/06/11 v0.1 Exam package for Relativity courses]
 
@@ -10,48 +19,92 @@
 \RequirePackage{fancyhdr}
 \RequirePackage[margin=2.5cm]{geometry}
 
+%% ---------------------------------------------------------------
+%% Boolean flags
+%% ---------------------------------------------------------------
+
+% Controls whether solution environments and correct-choice marks are shown
 \newif\ifjzexam@showanswers
 \jzexam@showanswersfalse
 
+% Controls whether the initial horizontal rule in the header is shown
 \newif\ifjzexam@showinitialhruler
 \jzexam@showinitialhrulertrue
+
+%% ---------------------------------------------------------------
+%% Package options
+%% ---------------------------------------------------------------
 
 \DeclareOption{answers}{\jzexam@showanswerstrue}
 \DeclareOption{noanswers}{\jzexam@showanswersfalse}
 \ProcessOptions\relax
+
+%% ---------------------------------------------------------------
+%% Public toggle commands for answer/ruler visibility
+%% ---------------------------------------------------------------
 
 \newcommand{\showanswers}{\jzexam@showanswerstrue}
 \newcommand{\hideanswers}{\jzexam@showanswersfalse}
 \newcommand{\showinitialhruler}{\jzexam@showinitialhrulertrue}
 \newcommand{\hideinitialhruler}{\jzexam@showinitialhrulerfalse}
 
-\newcommand{\jzexam@title}{Examen}
-\newcommand{\jzexam@subtitle}{}
-\newcommand{\jzexam@studentidlabel}{Cedula}
+%% ---------------------------------------------------------------
+%% Internal storage for exam title/subtitle and student-ID label
+%% ---------------------------------------------------------------
 
+\newcommand{\jzexam@title}{Exam}
+\newcommand{\jzexam@subtitle}{}
+\newcommand{\jzexam@studentidlabel}{ID}
+
+%% ---------------------------------------------------------------
+%% Internal state flags and storage for the header-field layout engine
+%% ---------------------------------------------------------------
+
+% True when the user has supplied custom header fields
 \newif\ifjzexam@customheaderfields
 \jzexam@customheaderfieldsfalse
+
+% True while inside the examproblems list (used by \problempage[header])
 \newif\ifjzexam@inproblems
 \jzexam@inproblemsfalse
+
 \newcommand{\jzexam@headerfields}{ }
+
+% Dimension registers used by the row-packing algorithm
 \newdimen\jzexam@lineused
 \newdimen\jzexam@fieldwidth
 \newdimen\jzexam@consumedwidth
 \newdimen\jzexam@autowidth
 \newdimen\jzexam@tmpdim
-\newcount\jzexam@autocount
-\newcount\jzexam@rowcount
-\newcommand{\jzexam@currentrow}{}
+
+% Counters used by the row-packing algorithm
+\newcount\jzexam@autocount  % number of auto-width fields in the current row
+\newcount\jzexam@rowcount   % total fields in the current row
+
+\newcommand{\jzexam@currentrow}{}  % accumulated content for the current row
+
+%% ---------------------------------------------------------------
+%% Public commands for setting exam metadata
+%% ---------------------------------------------------------------
 
 \newcommand{\examtitle}[1]{\renewcommand{\jzexam@title}{#1}}
 \newcommand{\examsubtitle}[1]{\renewcommand{\jzexam@subtitle}{#1}}
 \newcommand{\setstudentidlabel}[1]{\renewcommand{\jzexam@studentidlabel}{#1}}
+
+%% ---------------------------------------------------------------
+%% Internal: render a single fill-in field at a given explicit width
+%% ---------------------------------------------------------------
 
 \newcommand{\jzexam@renderfielddimen}[2]{%
   \jzexam@fieldwidth=#1\relax
   \parbox[t]{\jzexam@fieldwidth}{\textbf{#2:} \hrulefill}%
 }
 
+%% ---------------------------------------------------------------
+%% Internal: row-packing helpers
+%% ---------------------------------------------------------------
+
+% Reset all row state variables
 \newcommand{\jzexam@resetrow}{%
   \jzexam@consumedwidth=0pt
   \jzexam@autocount=0
@@ -59,8 +112,10 @@
   \renewcommand{\jzexam@currentrow}{}
 }
 
+% Flush the accumulated row to the page, then reset
 \newcommand{\jzexam@flushrow}{%
   \ifnum\jzexam@rowcount>0
+    % Compute equal share for any auto-width fields in this row
     \ifnum\jzexam@autocount>0
       \jzexam@autowidth=\dimexpr(\linewidth-\jzexam@consumedwidth)/\jzexam@autocount\relax
       \ifdim\jzexam@autowidth<0pt
@@ -76,21 +131,26 @@
   \fi
 }
 
+% Render a field whose width is given as a fraction of \linewidth
 \newcommand{\jzexam@entryspec}[2]{%
   \jzexam@tmpdim=#1\linewidth
   \jzexam@renderfielddimen{\jzexam@tmpdim}{#2}%
 }
 
+% Render a field using the computed auto-width
 \newcommand{\jzexam@entryauto}[1]{%
   \jzexam@renderfielddimen{\jzexam@autowidth}{#1}%
 }
 
+% Add a fraction-specified field to the current row; flush if needed
 \newcommand{\jzexam@addspec}[2]{%
   \jzexam@tmpdim=#1\linewidth
   \ifnum\jzexam@rowcount>0
+    % Flush if the row is already full
     \ifdim\jzexam@consumedwidth>\dimexpr\linewidth-0.1pt\relax
       \jzexam@flushrow
     \fi
+    % Flush if adding this field would overflow the row
     \ifdim\dimexpr\jzexam@consumedwidth+\jzexam@tmpdim\relax>\dimexpr\linewidth+0.1pt\relax
       \jzexam@flushrow
     \fi
@@ -98,11 +158,13 @@
   \g@addto@macro\jzexam@currentrow{\jzexam@entryspec{#1}{#2}}%
   \advance\jzexam@consumedwidth by \jzexam@tmpdim
   \advance\jzexam@rowcount by 1
+  % Flush immediately if the row is now exactly full
   \ifdim\jzexam@consumedwidth>\dimexpr\linewidth-0.1pt\relax
     \jzexam@flushrow
   \fi
 }
 
+% Add an auto-width field to the current row; flush if the row was already full
 \newcommand{\jzexam@addauto}[1]{%
   \ifnum\jzexam@rowcount>0
     \ifdim\jzexam@consumedwidth>\dimexpr\linewidth-0.1pt\relax
@@ -114,9 +176,20 @@
   \advance\jzexam@rowcount by 1
 }
 
+%% ---------------------------------------------------------------
+%% \examfield — public API for defining a header fill-in field
+%%
+%%   \examfield[fraction]{label}   — fraction of \linewidth (0..1)
+%%   \examfield{label}             — auto-width (shares leftover space)
+%% ---------------------------------------------------------------
+
 \NewDocumentCommand{\examfield}{o m}{%
   \IfNoValueTF{#1}{\jzexam@addauto{#2}}{\jzexam@addspec{#1}{#2}}%
 }
+
+%% ---------------------------------------------------------------
+%% \setexamheaderfields / \resetexamheaderfields
+%% ---------------------------------------------------------------
 
 \newcommand{\setexamheaderfields}[1]{%
   \jzexam@customheaderfieldstrue
@@ -124,10 +197,18 @@
 }
 \newcommand{\resetexamheaderfields}{\jzexam@customheaderfieldsfalse}
 
+%% ---------------------------------------------------------------
+%% \examinfo{title}{subtitle} — convenience wrapper
+%% ---------------------------------------------------------------
+
 \NewDocumentCommand{\examinfo}{m m}{%
   \examtitle{#1}%
   \examsubtitle{#2}%
 }
+
+%% ---------------------------------------------------------------
+%% Page style: centered footer showing title and page number
+%% ---------------------------------------------------------------
 
 \newcommand{\jzexam@applypagestyle}{%
   \pagestyle{fancy}
@@ -145,6 +226,11 @@
 
 \AtBeginDocument{\jzexam@applypagestyle}
 
+%% ---------------------------------------------------------------
+%% Internal rendering sub-commands
+%% ---------------------------------------------------------------
+
+% Render the bold title + optional subtitle
 \newcommand{\jzexam@renderinfoblock}{%
   \noindent\textbf{\Large \jzexam@title}\\
   \if\relax\detokenize{\jzexam@subtitle}\relax
@@ -153,12 +239,14 @@
   \fi
 }
 
+% Render the optional horizontal rule
 \newcommand{\jzexam@renderheaderline}{%
   \ifjzexam@showinitialhruler
     \rule{\textwidth}{1pt}
   \fi
 }
 
+% Render the student fill-in fields block
 \newcommand{\jzexam@renderfieldsblock}{%
   \jzexam@resetrow
   \ifjzexam@customheaderfields
@@ -169,6 +257,7 @@
   \jzexam@flushrow
 }
 
+% Compact header reprinted on problem continuation pages
 \newcommand{\jzexam@probleminfoheader}{%
   \begingroup
   \setlength{\parskip}{0pt}%
@@ -187,9 +276,20 @@
   \endgroup
 }
 
+%% ---------------------------------------------------------------
+%% \hideproblem — suppress the immediately following problem
+%% ---------------------------------------------------------------
+
 \newif\ifjzexam@hideproblem
 \jzexam@hideproblemfalse
 \newcommand{\hideproblem}{\global\jzexam@hideproblemtrue}
+
+%% ---------------------------------------------------------------
+%% \problempage[option] — insert a page break before a problem
+%%
+%%   \problempage          — plain page break
+%%   \problempage[header]  — page break + compact exam header
+%% ---------------------------------------------------------------
 
 \NewDocumentCommand{\problempage}{o}{%
   \ifjzexam@hideproblem\else
@@ -197,7 +297,8 @@
     \def\jzexam@ppopt{#1}%
     \def\jzexam@ppheader{header}%
     \ifx\jzexam@ppopt\jzexam@ppheader
-      % If called before the first \item inside examproblems, ignore header mode to avoid list errors.
+      % Inside examproblems: skip the header reprint before the first item
+      % to avoid triggering list errors at problem counter = 0.
       \ifjzexam@inproblems
         \ifnum\value{problem}=0
         \else
@@ -218,6 +319,10 @@
   \fi
 }
 
+%% ---------------------------------------------------------------
+%% \makeexamheader — render the main header on the first page
+%% ---------------------------------------------------------------
+
 \newcommand{\makeexamheader}{%
   \begingroup
   \setlength{\parskip}{0pt}%
@@ -234,11 +339,27 @@
   \vspace{0.5em}
 }
 
+%% ---------------------------------------------------------------
+%% Problem counter
+%% ---------------------------------------------------------------
+
 \newcounter{problem}
+
+%% ---------------------------------------------------------------
+%% examproblems environment — numbered list of problems
+%% ---------------------------------------------------------------
 
 \NewDocumentEnvironment{examproblems}{}
 {\jzexam@inproblemstrue\begin{enumerate}[label=\arabic*., leftmargin=*, itemsep=0.5em, topsep=0.4em, parsep=0pt, partopsep=0pt]}
 {\end{enumerate}\jzexam@inproblemsfalse}
+
+%% ---------------------------------------------------------------
+%% problem{title}[points] environment
+%%
+%%   #1  problem title (bold, large)
+%%   #2  optional point value — shown as "(N pt)"
+%%   #3  body
+%% ---------------------------------------------------------------
 
 \NewDocumentEnvironment{problem}{m O{} +b}
 {%
@@ -255,9 +376,15 @@
 }
 {}
 
+%% ---------------------------------------------------------------
+%% \hidequestion / \question — sub-question item with optional hiding
+%% ---------------------------------------------------------------
+
+% True while the current question is being absorbed into a discard box
 \newif\if@inhiddenquestion
 \@inhiddenquestionfalse
 
+% Set to true by \hidequestion; cleared after consuming the next \question
 \newif\if@hidequestion
 \@hidequestionfalse
 
@@ -265,9 +392,14 @@
   \global\@hidequestiontrue
 }
 
+%% ---------------------------------------------------------------
+%% questions environment — alphabetically labelled sub-question list
+%% ---------------------------------------------------------------
+
 \NewDocumentEnvironment{questions}{}
 {\begin{enumerate}[label=\alph*), leftmargin=*, itemsep=0.35em, topsep=0.25em, parsep=0pt, partopsep=0pt]}
 {%
+  % Close any open hidden-question discard box
   \if@inhiddenquestion
     \egroup
     \global\@inhiddenquestionfalse
@@ -275,12 +407,14 @@
 \end{enumerate}}
 
 \newcommand{\question}{%
+  % Close a previously open hidden-question discard box
   \if@inhiddenquestion
     \egroup
     \global\@inhiddenquestionfalse
   \fi
   
   \if@hidequestion
+    % Absorb this question (and any following solution) into a discard box
     \global\@hidequestionfalse
     \global\@inhiddenquestiontrue
     \setbox\z@=\vbox\bgroup
@@ -288,14 +422,21 @@
     \item
   \fi
 }
+
+% Named subsection inside a questions environment
 \newcommand{\questionsection}[1]{\question \textbf{#1}}
 
-% Herramientas para preguntas de seleccion unica/multiple.
-\newcommand{\singlechoicelabel}{Seleccion Unica}
-\newcommand{\multiplechoicelabel}{Seleccion Multiple}
+%% ---------------------------------------------------------------
+%% Multiple-choice question helpers
+%% ---------------------------------------------------------------
+
+% Default labels (override with \setsinglechoicelabel / \setmultiplechoicelabel)
+\newcommand{\singlechoicelabel}{Single Choice}
+\newcommand{\multiplechoicelabel}{Multiple Choice}
 \newcommand{\setsinglechoicelabel}[1]{\renewcommand{\singlechoicelabel}{#1}}
 \newcommand{\setmultiplechoicelabel}[1]{\renewcommand{\multiplechoicelabel}{#1}}
 
+% Symbol appended to correct choices when answers are shown
 \newcommand{\jzexam@correctmark}{*}
 \newcommand{\setcorrectmark}[1]{\renewcommand{\jzexam@correctmark}{#1}}
 
@@ -306,6 +447,12 @@
 \NewDocumentCommand{\multiplechoicequestion}{m}{%
   \question \textbf{(\multiplechoicelabel)} #1
 }
+
+%% ---------------------------------------------------------------
+%% choices[n] environment — multi-column answer list
+%%
+%%   Optional argument: number of columns (default 2)
+%% ---------------------------------------------------------------
 
 \NewDocumentEnvironment{choices}{O{2}}{%
   \begin{multicols}{#1}
@@ -318,14 +465,22 @@
 \NewDocumentCommand{\choice}{m}{\item #1}
 \NewDocumentCommand{\correctchoice}{m}{\item #1\answer{ \jzexam@correctmark}}
 
+%% ---------------------------------------------------------------
+%% solution environment — full solution block (shown in red when answers on)
+%% ---------------------------------------------------------------
+
 \NewEnviron{solution}{%
   \ifjzexam@showanswers
     \par\vspace{0.15em}
-    \textbf{Solucion:}\\
+    \textbf{Solution:}\\
     {\color{red}\BODY}
     \par\vspace{0.15em}
   \fi
 }
+
+%% ---------------------------------------------------------------
+%% \answer{text} — inline answer fragment (red when answers on)
+%% ---------------------------------------------------------------
 
 \NewDocumentCommand{\answer}{m}{%
   \ifjzexam@showanswers
@@ -333,12 +488,15 @@
   \fi
 }
 
-% Entorno para la hoja de formulas
+%% ---------------------------------------------------------------
+%% formulasheet environment — framed formula page at end of exam
+%% ---------------------------------------------------------------
+
 \newenvironment{formulasheet}
 {%
  \newpage
  \vspace*{\fill}
- \begin{center}\textbf{\Large Hoja de F\'ormulas}\end{center}\vspace{1em}
+ \begin{center}\textbf{\Large Formula Sheet}\end{center}\vspace{1em}
  \noindent\setbox\z@=\vbox\bgroup
  \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}%
  \small
