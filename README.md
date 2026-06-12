@@ -2,7 +2,7 @@
 
 **Author:** Jorge I. Zuluaga (C) 2026–present  
 **Repository:** [https://github.com/seap-udea/jzexam](https://github.com/seap-udea/jzexam)  
-**License:** GNU GPL v3
+**License:** [LPPL 1.3c](https://www.latex-project.org/lppl/lppl-1-3c.txt)
 
 ---
 
@@ -627,6 +627,8 @@ make
 `jzexam` — LaTeX Exam Package  
 Copyright (C) 2026–present Jorge I. Zuluaga
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This work may be distributed and/or modified under the conditions of the **LaTeX Project Public License (LPPL), version 1.3c** or (at your option) any later version.
 
-See the [LICENSE](LICENSE) file for full terms.
+This work has the LPPL maintenance status **`maintained`**. The Current Maintainer is Jorge I. Zuluaga.
+
+The latest version of the LPPL is at <https://www.latex-project.org/lppl.txt>. See the [LICENSE](LICENSE) file for the full license text and the list of files that constitute this work.
