@@ -10,15 +10,20 @@
 
 ---
 
+## About
+
+`jzexam` grew out of more than 20 years of hands-on experience writing LaTeX exams for university-level physics and astronomy courses. Over those two decades the author accumulated a set of recurring patterns — structured problem lists, togglable answer keys, multi-column choice layouts, per-page student headers — that were repeatedly copy-pasted across documents. `jzexam` formalises those patterns into a clean, reusable package.
+
+The package was designed and coded with the assistance of AI agents using [Cursor](https://www.cursor.com/) and the **Claude Sonnet 4.6** model. Every feature was driven by real classroom needs, tested against actual exams, and refined through direct human review and iteration. The result is a tool that reflects both decades of pedagogical practice and modern AI-assisted software craftsmanship.
+
+---
+
 ## Table of Contents
 
+- [About](#about)
 - [Installation](#installation)
   - [Local / command-line](#local--command-line)
   - [Overleaf](#overleaf)
-- [Compiling Locally](#compiling-locally)
-  - [macOS](#macos)
-  - [Linux](#linux)
-  - [Windows](#windows)
 - [Quick Start](#quick-start)
 - [Package Options](#package-options)
 - [Commands and Environments Reference](#commands-and-environments-reference)
@@ -33,6 +38,10 @@
   - [Visibility Controls](#visibility-controls)
 - [Makefile Usage](#makefile-usage)
 - [Template](#template)
+- [Compiling Locally](#compiling-locally)
+  - [macOS](#macos)
+  - [Linux](#linux)
+  - [Windows](#windows)
 
 ---
 
@@ -81,134 +90,6 @@ Copy `jzexam.sty` into the same directory as your `.tex` file, or place it in a 
 The easiest way to get started on Overleaf is to upload both `jzexam.sty` and `jztemplate.tex` to a new project and compile `jztemplate.tex`. This gives you a working 3-page exam with all features demonstrated.
 
 > **Tip — two-version workflow on Overleaf:** Duplicate the project (Menu → Copy Project) to keep one copy for the student version (`noanswers`) and one for the answer key (`answers`). Toggle the option in `\usepackage[...]{jzexam}` in each copy and compile separately.
-
----
-
-## Compiling Locally
-
-`jzexam` requires a standard LaTeX distribution. The recommended engine is `pdflatex`, but `lualatex` and `xelatex` also work. The sections below cover installation and compilation for each major platform.
-
----
-
-### macOS
-
-**1. Install MacTeX**
-
-Download and install [MacTeX](https://www.tug.org/mactex/) (≈ 5 GB, includes TeX Live and GUI tools):
-
-```bash
-# With Homebrew (recommended):
-brew install --cask mactex-no-gui   # headless, ~1 GB
-# or
-brew install --cask mactex          # full suite with TeXShop, BibDesk, etc.
-```
-
-Alternatively, download the installer directly from [tug.org/mactex](https://www.tug.org/mactex/).
-
-**2. Verify the installation**
-
-Open a new terminal and run:
-
-```bash
-pdflatex --version
-```
-
-**3. Compile an exam**
-
-```bash
-# Using the Makefile (recommended):
-cd /path/to/your/exam
-make                    # compiles jztemplate.tex → jztemplate.pdf
-make MAIN=my-exam       # compiles my-exam.tex → my-exam.pdf
-
-# Or directly with pdflatex:
-pdflatex jztemplate.tex
-```
-
-**4. GUI editors**
-
-[TeXShop](https://pages.uoregon.edu/koch/texshop/) (included with MacTeX) and [VS Code](https://code.visualstudio.com/) with the [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension are popular choices on macOS.
-
----
-
-### Linux
-
-**1. Install TeX Live**
-
-```bash
-# Debian / Ubuntu
-sudo apt install texlive-full        # complete installation (~5 GB)
-# Minimal + required packages only:
-sudo apt install texlive-latex-extra texlive-fonts-recommended
-
-# Fedora / RHEL
-sudo dnf install texlive-scheme-full
-
-# Arch Linux
-sudo pacman -S texlive-most
-```
-
-> For the most up-to-date TeX Live, you can also install via the [upstream installer](https://www.tug.org/texlive/acquire-netinstall.html) instead of your distro's package manager.
-
-**2. Verify the installation**
-
-```bash
-pdflatex --version
-```
-
-**3. Compile an exam**
-
-```bash
-cd /path/to/your/exam
-make                    # uses the included Makefile
-# or
-pdflatex jztemplate.tex
-```
-
-For automatic recompilation on save, [latexmk](https://ctan.org/pkg/latexmk) (included with TeX Live) is useful:
-
-```bash
-latexmk -pdf -pvc jztemplate.tex    # watch mode: recompiles on every save
-```
-
-**4. GUI editors**
-
-[Texmaker](https://www.xm1math.net/texmaker/), [TeXstudio](https://www.texstudio.org/), and VS Code with LaTeX Workshop are widely used on Linux.
-
----
-
-### Windows
-
-**1. Install MiKTeX or TeX Live**
-
-- **MiKTeX** (recommended for Windows): download from [miktex.org](https://miktex.org/download). MiKTeX installs missing packages on-the-fly the first time you compile, so you can start with a minimal setup.
-- **TeX Live for Windows**: download from [tug.org/texlive](https://www.tug.org/texlive/windows.html) and run the network installer.
-
-**2. Verify the installation**
-
-Open **Command Prompt** or **PowerShell** and run:
-
-```powershell
-pdflatex --version
-```
-
-**3. Compile an exam**
-
-```powershell
-cd C:\path\to\your\exam
-
-# With pdflatex directly:
-pdflatex jztemplate.tex
-
-# With the Makefile (requires GNU Make, e.g. via Git for Windows or Chocolatey):
-make
-```
-
-> **Note on `make` on Windows:** The `Makefile` requires GNU Make. Install it via [Git for Windows](https://gitforwindows.org/) (includes a bash shell with `make`) or with [Chocolatey](https://chocolatey.org/): `choco install make`.
-
-**4. GUI editors**
-
-[TeXstudio](https://www.texstudio.org/) and [TeXworks](https://www.tug.org/texworks/) (bundled with MiKTeX) are the most common choices on Windows. VS Code with LaTeX Workshop also works well.
 
 ---
 
@@ -610,6 +491,134 @@ Compile with:
 ```bash
 pdflatex jztemplate.tex
 ```
+
+---
+
+## Compiling Locally
+
+`jzexam` requires a standard LaTeX distribution. The recommended engine is `pdflatex`, but `lualatex` and `xelatex` also work. The sections below cover installation and compilation for each major platform.
+
+---
+
+### macOS
+
+**1. Install MacTeX**
+
+Download and install [MacTeX](https://www.tug.org/mactex/) (≈ 5 GB, includes TeX Live and GUI tools):
+
+```bash
+# With Homebrew (recommended):
+brew install --cask mactex-no-gui   # headless, ~1 GB
+# or
+brew install --cask mactex          # full suite with TeXShop, BibDesk, etc.
+```
+
+Alternatively, download the installer directly from [tug.org/mactex](https://www.tug.org/mactex/).
+
+**2. Verify the installation**
+
+Open a new terminal and run:
+
+```bash
+pdflatex --version
+```
+
+**3. Compile an exam**
+
+```bash
+# Using the Makefile (recommended):
+cd /path/to/your/exam
+make                    # compiles jztemplate.tex → jztemplate.pdf
+make MAIN=my-exam       # compiles my-exam.tex → my-exam.pdf
+
+# Or directly with pdflatex:
+pdflatex jztemplate.tex
+```
+
+**4. GUI editors**
+
+[TeXShop](https://pages.uoregon.edu/koch/texshop/) (included with MacTeX) and [VS Code](https://code.visualstudio.com/) with the [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension are popular choices on macOS.
+
+---
+
+### Linux
+
+**1. Install TeX Live**
+
+```bash
+# Debian / Ubuntu
+sudo apt install texlive-full        # complete installation (~5 GB)
+# Minimal + required packages only:
+sudo apt install texlive-latex-extra texlive-fonts-recommended
+
+# Fedora / RHEL
+sudo dnf install texlive-scheme-full
+
+# Arch Linux
+sudo pacman -S texlive-most
+```
+
+> For the most up-to-date TeX Live, you can also install via the [upstream installer](https://www.tug.org/texlive/acquire-netinstall.html) instead of your distro's package manager.
+
+**2. Verify the installation**
+
+```bash
+pdflatex --version
+```
+
+**3. Compile an exam**
+
+```bash
+cd /path/to/your/exam
+make                    # uses the included Makefile
+# or
+pdflatex jztemplate.tex
+```
+
+For automatic recompilation on save, [latexmk](https://ctan.org/pkg/latexmk) (included with TeX Live) is useful:
+
+```bash
+latexmk -pdf -pvc jztemplate.tex    # watch mode: recompiles on every save
+```
+
+**4. GUI editors**
+
+[Texmaker](https://www.xm1math.net/texmaker/), [TeXstudio](https://www.texstudio.org/), and VS Code with LaTeX Workshop are widely used on Linux.
+
+---
+
+### Windows
+
+**1. Install MiKTeX or TeX Live**
+
+- **MiKTeX** (recommended for Windows): download from [miktex.org](https://miktex.org/download). MiKTeX installs missing packages on-the-fly the first time you compile, so you can start with a minimal setup.
+- **TeX Live for Windows**: download from [tug.org/texlive](https://www.tug.org/texlive/windows.html) and run the network installer.
+
+**2. Verify the installation**
+
+Open **Command Prompt** or **PowerShell** and run:
+
+```powershell
+pdflatex --version
+```
+
+**3. Compile an exam**
+
+```powershell
+cd C:\path\to\your\exam
+
+# With pdflatex directly:
+pdflatex jztemplate.tex
+
+# With the Makefile (requires GNU Make, e.g. via Git for Windows or Chocolatey):
+make
+```
+
+> **Note on `make` on Windows:** The `Makefile` requires GNU Make. Install it via [Git for Windows](https://gitforwindows.org/) (includes a bash shell with `make`) or with [Chocolatey](https://chocolatey.org/): `choco install make`.
+
+**4. GUI editors**
+
+[TeXstudio](https://www.texstudio.org/) and [TeXworks](https://www.tug.org/texworks/) (bundled with MiKTeX) are the most common choices on Windows. VS Code with LaTeX Workshop also works well.
 
 ---
 
